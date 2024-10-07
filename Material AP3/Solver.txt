@@ -1,0 +1,66 @@
+# CAMADA DE ENLACE #
+-- ############### --
+1ª) O cabeçalho da camada de enlace é sempre o mesmo ou depende da tecnologia?
+Qual o tamanho mínimo?
+R: Depende da tecnologia, pois cada tecnologia implementa o cabeçalho da maneira que necessita, logo, cada cabeçalho terá tamanho diferente. O tamanho mínimo é #0#.
+
+2ª) O que é um endereço MAC e qual a sua relação com um endereço IP?
+R: O endereço MAC é um endereço exclusivo da interface de rede (placa de rede) de uma máquina que lhe é atribuído no momento de sua fabricação, usado para identificar uma interface de rede em uma rede local. A relação entre MAC e IP consiste na tradução através do protocolo ARP: Quando uma máquina quer se comunicar com outra máquina na mesma LAN (local area network), é enviado um pacote para um endereço IP, sendo de responsalibidade do ARP traduzir este endereço IP para MAC. ARP(IP) -> MAC. E quando uma máquina quer se comunicar com outra que não está na mesma LAN, é utilizado o ARP para descobrir o endereço MAC do roteador de borda, e assim o roteador de borda passa o pacote para outra rede.
+
+3ª) Explique para que serve e como funciona o protocolo CSMA/CD.
+R: O protocolo serve para controlar o acesso a canais compartilhados, fazendo escuta do canal para perceber se está sendo utilizado, se o canal estiver livre, ele transmite, senão aguarda ficar livre. O protocolo também percebe e trata colisões: ao enviar um quadro, o emissor se mantém observando o canal para detectar colisões, caso haja colisão o mesmo para o envio, e é acionado o algoritmo Exponetial Backoff que irá sortear aleatoriamente o tempo de espera que os emissores envolvidos na colisão irão aguardar até o reenvio. O Exponetial Backoff irá ser usado até que n = 9 ou haja 16 tentativas de envio, nestes casos, o quadro é apagado da memória.
+
+-- *************** --
+4ª) O que é um domínio de colisão?
+R: É literalmente um canal compartilhado, onde multiplos emissores podem fazer uso do mesmo canal.
+
+-- *************** --
+5ª) O que é o Checksum e porque ele fica ao final (epílogo) de um quadro Ethernet e não no cabeçalho do quadro?
+R: O Checksum é um campo verificado para perceber se houve alteração no pacote (erro) durante o envio. Ele fica no fim do quadro pois a verificação deve ocorrer somento quando todo o quadro estiver montado, incluindo os dados de cabeçalho.
+
+6ª) Para poder enviar um quadro a outra máquina, que tipo de consulta ARP é feita quando:
+
+a. O destino está na mesma rede local?
+R: O emissor faz um ARP Request em broadcast na rede, solicitando o endereço MAC correspondente a um endereço IP específico. A máquina que tiver o IP igual ao IP do Request, responderá em unicast seu endereço MAC. Então o emissor guarda em sua tabela o endereço MAC associado àquele IP e por fim, encaminha o quadro.
+
+b. O destino está em uma rede local diferente?
+R: O emissor fará um ARP Request em busca do endereço MAC do roteador de borda, fará o mesmo procedimento quando o destino está na mesma rede e repassará o quadro para o roteador. O roteador então fará a comunicação entre redes.
+
+# CAMADA FISÍCA #
+
+1ª) Diferencie transmissão Simplex, full-duplex e half-duplex.
+R: 
+SIMPLEX: tipo de transmissão unidirecional, onde apenas há o recebimento de dados ou o envio de dados.
+HALF-DUPLEX: tipo de transmissão onde há recebimento e envio de dados, mas em momentos diferentes.
+FULL-DUPLEX: tipo de transmissão onde há recebimento e envio de dados a qualquer momento.
+
+2ª) Diferencie unicast, multicast, anycast e broadcast (difusão).
+R: Todos as formas citadas são de transmissão de dados. O diferencial vem em como eu transmito estes dados:
+Broadcast -> Envia o dado para todos em uma rede. (1 para muitos de uma rede)
+Unicast -> Envia o dado para um único receptor específico. (1 para 1 específico)
+Multicast -> Envia o dado para um grupo específico. (1 para muitos de um grupo)
+Anycast -> Envia o dado para um único receptor (mais próximo) em um grupo. (1 para o primeiro de um grupo)
+
+3ª) Qual é a diferença entre hubs, switches e roteadores?
+R: 
+Hubs: implementam essencialmente a camada fisíca. São literalmente repetidores: os dados que chegam nele são repetidos para todos que estão conectados a ele com exceção do próprio emissor, isto gera muitas colisões e traz um baixo desempenho. Apesar de ser o mais simples e barato, seu uso é obsoleto.
+Switches: implementam a camada fisíca e enlace. Fazem envio de dados direcionado: diferente dos hubs, os dados que chegam ao switche são repassados apenas ao enlace correspondente na sua tabela (caso não haja correspondente na tabela, fará uma transmissão flood aos enlaces conectados a ele com exceção do enlace que enviou os dados a ele). Com isto, traz uma grande melhoria quanto as colisões geradas e traz alto desempenho. Apesar de ser mais caro que um HUB, é usado para conectar redes locais (LAN).
+Roteadores: implementam a camada fisíca, enlace e rede. Fazem envio de dados entre redes. Dentre todos os citados, é o mais complexo e caro, mas é utilizado para conectar redes diferentes.
+
+
+### Perguntar sobre a diferença de um repetidor e um amplificador ###
+
+4ª) O cabeçalho da camada de enlace é sempre o mesmo ou depende da tecnologia? *(EXATAMENTE IGUAL A Q1 DA LISTA SOBRE ENLACE)*
+Qual o tamanho mínimo?
+R: Depende da tecnologia, pois cada tecnologia implementa o cabeçalho da maneira que necessita, logo, cada cabeçalho terá tamanho diferente. O tamanho mínimo é #0#.
+
+5ª) Diferencie as topologias em estrela, em barra e em anel, citando vantagens e desvantagens.
+R:
+Estrela: Topologia onde todos os dispositivos são conectados a um único ponto central, geralmente HUB ou switche. Suas vantagens são: facilidade de remover e adicionar dispositivos a topologia, facilidade em administrar a rede no único ponto central,resiliência: caso um dispositivo caia, não afetará o restante da topologia. Sua principal desvantagem é o ponto único de falha: caso o hub ou switche central caia ou sofra de qualquer forma, isto afetará COMPLETAMENTE a topologia.(Também tem a questão do alto custo).
+
+Barra ou barramento: Topologia onde todos os dispositivos são conectados a um único cabo de barramento que atua como meio de transmissão principal. Suas vantagens são: Simplicidade e custo: como há apenas um cabo central, pode ser mais barato se conectar a ele. Desvantagens: ao adicionar mais dispositivos a topologia, a mesma tem seu desempenho afetado, pois há mais usuários do mesmo cabo central. Qualquer falha no cabo central pode afetar toda a rede. Há uma grande chance de haver muitas colisões.
+
+Anel: Topologia onde um dispositivo está conectado a outros dois dispositivos formando um anel fechado. Suas vantagens principais são: rápida detecção de erros e caminhos redundantes. Suas desvantagens principais são: adicionar novos dispositivos pode ser mais complexo e pode exigir a interrupção temporária da rede, e  o desempenho pode ser afetado pelo número de dispositivos no anel, pois os dados têm que passar por cada dispositivo antes de alcançar o destino.
+
+6ª) Explique porque em cabos de rede metálicos com vários fios estes são agrupados em pares entrelaçados.
+R: A razão principal para agrupar e entrelaçar os fios em cabos de rede metálicos é minimizar a interferência eletromagnética e garantir a qualidade da transmissão de dados.

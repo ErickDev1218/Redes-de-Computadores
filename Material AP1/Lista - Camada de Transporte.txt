@@ -1,0 +1,49 @@
+Q01 ->  A multiplexação é um serviço realizado pela camada de transporte. O que acontece basicamente é: uma aplicação precisa enviar uma mensagem para outra aplicação, portanto, esta mensagem é passada, via socket, para a camada de transporte, que irá adicionar um cabeçalho. Neste cabeçalho irá conter o IP do remetente, o IP do destinatário e algumas outras informações. Isto ocorre porque muitas mensagens precisam ser passadas por um único canal, portanto é cabível a criação deste cabeçalho para uma melhor organização. Este processo é chamado de multiplexação. Esta mensagem chegará a camada de transporte do destinatário, que será responsável por observar o cabeçalho e destinguir de onde veio e para qual aplicação deve ser entregue aquela mensagem, pois por este mesmo canal, chegará inúmeras mensagens e todas devem ser entregues a sua aplicação correta. Este processo é chamado de demultiplexação. Os processos de multiplexação e demultiplexação garantem uma entrega eficiente e segura. Um exemplo fora da área da computação: imagine que você aos correios deixar uma carta mas você não preencheu os campos de remetente e destinatário. Ao entregar a carta na mão do funcionário, o mesmo irá perguntar sobre os campos e irá preencher para você e levará a sua carta, junto de várias outras cartas pela BR-020. A sua carta ao chegar na sede da cidade, irá ser vista por um outro funcionário que deve ser capaz de ler e entender os campos de remetente e destinatário. Assim, o mesmo encaminhará a sua carta para um outro funcionário que fará uma rota nas proximidades do destino final. Por sua vez, esse funcionário que está na rota, observará o campo destinatário e será capaz de entregar a sua carta no endereço correto.
+Pegar vários canais e juntar em um só.
+
+Q02 ->  O TCP foi pensado com orientação a conexão, diferente do UDP, que não impõe tal condição. O TCP garante a entrega do pacote, a ordem de chegada, o controle de fluxo e o controle de congestionamento. Nada disso o UDP faz. A única coisa que o UDP faz é receber dados e processar dados. O TCP foi pensado para aplicações que demandam maior segurança, como aplicativos de bancos, e-mail e etc. O UDP foi pensado para aplicações que requerem maior velocidade na transmissão e receptação de dados, por isso, é bem menos "burocratico", exemplos de aplicativos UDP são jogos online, aplicativos Streaming no geral e etc.
+
+Q03 ->  TCP: O cliente solicita o inicio de uma conexão e aguarda o servidor responder com "OK". Após isso, a conexão está aberta e o cliente pode começar a fazer solicitações para o servidor. Neste momento, o servidor tenta atender as requisições feitas pelo cliente. Após o servidor acabar de enviar as respostas das requisições, o mesmo envia junto da ultima mensagem um aviso que irá encerrar a conexão. O cliente recebe os pacotes e a mensagem de encerramento, assim, o mesmo responde que recebeu os pacotes e fecha a conexão.
+    UDP: O servidor UDP está sempre de portas abertas, ao receber uma requisição de um cliente UDP, simplesmente a responde, sem se preocupar em fechar a conexão (até mesmo porque esta nao foi estabelicida) ou sequer se a mensagem chegou ao cliente que a solicitou.
+
+Q04 ->  Para se identificar um processo específico em uma máquina é necessário ter o IP e a porta. A porta indicará especificamente o processo, pois a porta é um número assocido a um processo específico em um dispositivo de rede. O IP irá indicar de fato onde em qual máquina o processo acontence. Imagine o IP como o endereço de um prédio e a porta como o número do apartamento neste prédio. Um exemplo de seria 192.168.0.1:80
+
+*** FAZER PERGUNTA AQUI ***
+Q05 ->  Sockets são pontos de acessos a rede de uma aplicação. Usam o número IP e a porta para dizer onde estão. Pode ser o ponto inicial ou final de uma transmissão. Por exemplo, um cliente SMTP utiliza um socket no cliente e um servidor SMTP utiliza um socket no servidor, assim se torna possível a comunicação entre o cliente e o servidor. Existe também dois tipos de sockets: o socket TCP, que traz todos os beneficios e maleficios do protocolo, e o socket UDP, que também traz suas particularidades.
+
+Funções para o uso de socket TCP *SERVIDOR* em ordem:
+socket() -> Cria um novo descritor para a comunicação
+bind() -> Atribui um endereço IP e uma porta ao socket
+listen() -> Coloca o servidor em modo passivo para escutar portas
+accept() -> Bloqueia o servidor até a chegada de uma conexão
+read() -> Ler dados de uma conexão
+write() -> Escreve dados em uma conexão
+close() -> Fecha a conexão
+
+Funções para o uso de socket TCP *CLIENTE* em ordem:
+socket() -> Cria um novo descritor para a comunicação
+connect() -> Inicia conexão com o servidor
+write() -> Escreve dados em uma conexão
+read() -> Ler dados em um conexão
+close() -> Fecha a conexão
+
+Funções para o uso de socket UDP *SERVIDOR* em ordem:
+socket() -> Cria um novo descritor para a comunicação
+bind() -> Atribui um IP e uma porta ao socket
+recvfrom() -> Recebe um datagrama e guarda o endereço do emissor (bloqueia o servidor até o recebimento)
+sendto() -> Envia um datagrama especificando o endereço
+*** FAZER PERGUNTA AQUI ***
+close() -> Fecha o socket (fecha o servidor)
+
+Funções para o uso de socket UDP *CLIENTE* em ordem:
+socket() -> Cria um novo descritor para a comunicação
+sendto() -> Envia um datagrama especificando o endereço
+recvfrom() -> Recebe um datagrama e guarda o endereço do emissor
+*** FAZER PERGUNTA AQUI ***
+close() -> Fecha o socket (fecha o cliente)
+
+Q06 -> O checksum é um validador. Serve para detectar perda ou corrompimentos de pacotes. O agente transmissor do pacote irá usar de um algoritmo matemático (soma ponderada de bits) para calcular o checksum antes de enviar o pacote, ao enviar o pacote, o mesmo irá enviar também o valor do checksum. O receptor deverá usar o mesmo algoritmo e calcular o checksum sobre o pacote que recebeu. Se os valores dos dois checksum coincidirem, quer dizer que o pacotes não tem perda ou corrompimentos, caso não, indica perda ou corrompimentos. O checksum é uma maneira eficiente de verificar possiveis erros, mas, em contra partida, diferentes conjuntos de dados podem gerar o mesmo valor de checksum, logo, o mecanismo não é perfeito.
+
+Q07 ->  O cliente TCP solicita uma conexão com o servidor TCP. Caso o servidor esteja livre, a conexão é estabelecida e o servidor envia uma mensagem de confirmação para o cliente TCP. Após realizar tudo que se faz necessário na conexão, o cliente enviará uma mensagem que quer encerrar a conexão, o servidor processará a mensagem, enviará uma reposta de confirmação do fim de sessão e fechará a conexão. O cliente recebe a mensagem de fim de sessão e encerra a conexão no lado do cliente. SYN SYN-ACK ACK. FIN ACK FIN ACK
+
+EVITAR CONGESTIONAMENTO

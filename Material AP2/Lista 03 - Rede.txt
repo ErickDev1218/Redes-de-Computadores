@@ -1,0 +1,79 @@
+Q01 -> Cite e explique os cinco serviços da camada de rede.
+R: Os 5 serviços ofertados são:
+    1. Endereçamento: Este serviço é responsável por identificar cada máquina na rede de forma distinta, através do seu IP. Garantindo que a transferência de pacotes seja feita de forma correta.
+    2. Roteamento: Este serviço é responsável por decidir por qual caminho os pacotes irão seguir entra a origem e o destino da transmissão. Este serviço usa de algoritmos para decidir mais o caminho mais eficiente e segura.
+    3. Internetworking: Este serviço é responsável pela conectividade entre redes, juntando redes pequenas a outras redes pequenas, formando assim uma super rede: a internet.
+    4. Encapsulamento: Este serviço é responsável por adicionar cabeçalhos aos dados transmitidos, para que seja capaz de se identificar o endereço de origem, o endereço de destino e qual protocolo utilizado. O encapsulamento garante que os pacotes de dados possam ser roteados e entregues corretamente através da rede.
+    5. Fragmentação: Este serviço é responsável por dividir pacotes grandes em pacotes menores, devido às limitações de tamanho dos pacotes que os roteadores podem processar. A fragmentação garante, além da fragmentação segura, a reestruturação segura antes da entrega ao destino final.
+
+Q02 -> Qual a diferença entre roteamento intra-AS e roteamento inter-AS?
+R: O roteamento intra-AS implementa um protocolo comum àquela rede autônoma, já os roteadores de borda, que estão presentes em todas as redes, implementam o protocolo inter-AS, para que possa haver a comunicação entre várias redes. Por tanto, a rede A pode implementar o protocolo X e a rede B o protocolo Y, mas os rotedores de borda da rede A e B devem implementar o mesmo protocolo Z.
+
+
+Q03 -> Quais as características de um protocolo de roteamento por “estado do enlace” (link state)?
+R: * Cada roteador tem conhecimento completo da topologia da rede. 
+   * Cada roteador guarda o mesmo conjunto de informações sobre a rede. 
+   * Os roteadores inundam periodicamente a rede com informações sobre seus enlaces conectados (LSAs - Link State Advertisements).
+   * Utiliza do algoritmo de Dijkstra para calcular o caminho mínimo entre todos roteadores. 
+   * Em caso de alteração na topologia (como a falha de um enlace ou adição de um novo roteador), os LSAs são rapidamente propagados pela rede, permitindo que os roteadores recalculam seus caminhos e convergem para um estado estável rapidamente.
+
+Q04 -> Quais as características de um protocolo de roteamento por vetor de distância?
+R: * Cada roteador mantêm sua tabela DV e, sempre que seu DV muda, o roteador propaga essa informação aos seus vizinhos.
+   * Os roteadores trocam periodicamente suas tabelas de roteamento com seus vizinhos.
+   * O algoritmo de Bellman-Ford é utilizado para atualizar o DV.
+
+Q05 -> Quais as diferenças entre o RIPv1 e o RIPv2?
+R: * O RIPv2 pode oferecer suporte a redes de classe completa e sem classes, enquanto RIPv1 suporta apenas redes de classe completa. 
+   * RIPv2 suporta autenticação, sendo assim mais seguro, já o RIPv1 não suporta autenticação.
+   * RIPv2 suporta VLSM (Variable Length Subnet Mask) permitindo o uso de sub-redes de diferentes tamanhos, e redes descontínuas, enquanto RIPv1 não suporta VLSM.
+   * RIPv2 utiliza de tráfego multicast para atualizações de roteamento, reduzindo a carga na rede, enquanto RIPv1 utiliza apenas o trafégo broadcast para enviar atualizações de roteamento.
+   * RIPv2 fornece atualizações de gatilhos (Triggers) para mudanças rápidas na rede, enquanto RIPv1 utiliza principalmente atualizações periódicas.
+   * RIPv2 envia a máscara de sub-rede para a DV, enquanto o RIPv1 não envia informações sobre a sub-rede.
+   * RIPv2 suporta sumarização de rota manual, enquanto RIPv1 não suporta.
+
+Q06 -> Por que existe o OSPF hierárquico? Explique como funciona, suas vantagens e desvantagens.
+R: O OSPF hierárquico existe para administrar melhor grandes redes, visando escalar o protocolo e otimizar o cálculo de rotas.
+   Funciona da seguinte forma: 
+   * A rede é dividida em várias áreas menores e a área principal (backbone ou área 0).
+   * Roteadores de área calculam suas rotas de forma independente (usando informações do estado de enlace da sua área) e trocam informações somente com roteadores da sua mesma área.
+   * Roteadores da área de backbone conectam duas ou mais áreas e mantêm uma tabela de roteamento completa para todas as áreas. A área de backbone calcula as melhores rotas entre as áreas usando informações de outros roteadores da área de backbone. As rotas calculadas nas áreas de backbones são disseminadas para todas as áreas.
+   As vantagens são:
+   * Maior escalabilidade.
+   * Convergência mais rápida.
+   * Redução do tráfego de broadcast.
+   * Flexibilidade
+   As desvantagens são:
+   * Complexidade.
+   * Ponto único de falha (área de backbone)
+
+Q07 -> Como é possível que dois pacotes enviados por uma mesma máquina e para o mesmo destino cheguem em ordem diferente da ordem de envio? Explique.
+R: Os pacotes podem seguir por rotas diferentes, com isto, uma das rotas pode ser mais rápida que a outra. Portanto, dois pacotes enviados de uma mesma máquina podem chegar em tempos diferentes.
+
+Q08 -> Como funciona o programa “traceroute”?
+R: O principal objetivo é descobrir todos os roteadores entre o destino e a origem. O programa recebe um endereço de destino. A origem envia uma série de segmentos UDP para o primeiro roteador com TTL 1. O roteador recebe os pacotes e retorna uma mensagem de TTL expirado através do ICMP, nesta mensagem tem o IP do primeiro roteador. Com isso, a origem sabe qual o primeiro roteador entre a origem e o destino. Em seguida, envia mais segmentos UDP, mas agora com TTL 2, assim, terá informações sobre o segundo roteador no caminho. O mesmo se repete até o destino (incrementando o TTL de 1 em 1). Ao chegar no destino, o mesmo retorna o último pacote ICMP com "hospedeiro unreachable" (pois estes segmentos UDP tem uma porta improvável), quando a origem finalmente recebe este pacote, ele para e agora ele sabe qual a rota da origem ao destino.
+
+Q09 -> Explique rede, sub-rede e super-rede e máscara de rede.
+R: * Rede: é o conjunto de dispositivos interconectados, como computadores, servidores e telefones, que podem se comunicar entre si. Essa interconexão permite a troca de informações. Na rede, cada dispositivo tem endereço IP único que o identifica.
+   * Sub-rede: É uma subdivisão lógica de uma rede IP maior, afim de organizar uma rede em segmentos menores. Cada sub-rede possui um intervalo específico de endereços IP e é definida por uma máscara de sub-rede.
+   * Super-rede: Consiste em combinar várias redes menores em uma única rede maior. A ideia é agrupar redes que estão geograficamente próximas ou que possuem algum tipo de relação lógica. Isso é feito reduzindo o comprimento da máscara de rede, permitindo a agregação de endereços IP. 
+   * Máscara de rede: A máscara de rede é um conjunto de bits que define qual parte do endereço IP é a parte da rede e qual parte é a parte do host. A máscara de rede é geralmente expressa em notação decimal com pontos, como 255.255.255.0, ou em notação CIDR, como /24.Por exemplo, a máscara de rede 255.255.255.0 (ou /24) indica que os primeiros 24 bits do endereço IP são a parte da rede, e os últimos 8 bits são a parte do host.
+
+Q10 -> Diferencie unicast, multicast, anycast e broadcast.
+R: Todas opções são formas de transmissão de dados, o que as diferencia é como é feito.
+   * Unicast: envia dados de uma única origem para um único destino (ex: chamada de vídeo).
+   * Multicast: envia dados de uma única origem para um grupo selecionado de destinatários (ex: streaming de vídeo).
+   * Anycast: envia dados de uma única origem para o receptor mais próximo em um grupo de receptores (ex: servidores DNS).
+   * Broadcast: envia dados de uma única origem para todos os receptores em uma rede (ex: servidor DHCP).
+
+Q11 -> Como o Network Address Translation (NAT) funciona? 
+R: O roteador NAT é configurado e disposto para interceptar pacotes enviados por emissores de uma rede privada. O NAT então pega esses pacotes, troca os dados de cabeçalho, colocando seu endereço IP público (no lugar do endereço IP particular do emissor original) e sua porta adequada, salva os IP e porta do emissor original e do destino final, data e hora do último pacote e o protocolo utilizado, e, por fim, envia o pacote para o destino. Ao receber a resposta, o NAT troca novamente os dados de cabeçalho, colocando o IP e porta original do emissor, atualiza a data e hora, e envia o pacote ao emissor.
+
+Q12 -> Quais as vantagens do IPv6? Ele é realmente necessário?
+R: A principal vantagem do IPv6 é o aumento das faixas de rede, antes, com o IPv4, as faixas usavam no máximo 32Bits, agora, com IPv6, é utilizado 128Bits, um aumento notório nas faixas de rede. Atualmente não é uma condição necessária para o funcionamento da rede, mas no futuro com certeza será totalmente necessário.  
+
+Q13 -> 
+Classe A: Primeiro bit é 0 (zero);
+Classe B: Primeiros dois bits são 10 (um, zero);
+Classe C: Primeiros três bits são 110 (um, um, zero);
+Classe D: (endereço multicast): Primeiros quatro bits são: 1110 (um, um, um, zero);
+Classe E: (endereço especial reservado): Primeiros quatro bits são 1111 (um, um, um, um).
